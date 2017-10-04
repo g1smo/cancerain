@@ -22,7 +22,12 @@ renderer = new THREE.WebGLRenderer({
 });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0xFFFFFF, 1);
+
+// Belo ozadje
+//renderer.setClearColor(0xFFFFFF, 1);
+// Črno ozadje
+renderer.setClearColor(0x000000, 1);
+
 pixel_size = 2;
 width = 2;
 height = 2;
@@ -73,8 +78,19 @@ function render () {
 function camRotate () {
     var dist = 100;
     var offset = 1;
+
+    // rotiraj po z osi
     camera.translateX(offset);
     camera.translateZ(dist - Math.sqrt(Math.pow(dist, 2) + Math.pow(offset, 2)));
+
+    /*
+    camera.translateY(offset);
+    camera.translateX(dist - Math.sqrt(Math.pow(dist, 2) + Math.pow(offset, 2)));
+
+    camera.translateY(offset);
+    camera.translateX(dist - Math.sqrt(Math.pow(dist, 2) + Math.pow(offset, 2)));
+    */
+
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 };
 
@@ -85,4 +101,12 @@ document.onreadystatechange = function () {
 
         render();
     }
+};
+
+// Lep risajz
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
+window.addEventListener('resize', onWindowResize, false);
