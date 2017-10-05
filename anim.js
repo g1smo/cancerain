@@ -8,7 +8,7 @@ console.log("Hello, Sky!");
 var odmik_kamere = 100;
 
 // Rotacija kamere
-var cam_rot_offset = 0.2;
+var cam_rot_offset = 1;
 
 // Vidni kot
 var FOV = 140;
@@ -17,9 +17,14 @@ var FOV = 140;
 var width = 2;
 var height = 2;
 
+
+
+
 // Prvotno prazno polje objektov. Lahko bi kak buffer to bil pozneje
 var objekti = [];
 
+// Stevec, za razno animiranje
+var stevec = 0;
 
 
 
@@ -56,14 +61,35 @@ renderer.setClearColor(0x000000, 1);
 
 
 
-// Funkcija za rotacijo objektov
-function objRotate() {
+
+function render () {
+    requestAnimationFrame(render);
+
+    stevec += 1;
+
+    // Dodaj objekt vcasih
+    if (stevec % 2 === 0) {
+        addObj(width, height);
+    }
+
+    renderer.render(scene, camera);
+
+    objAnim();
+
+    camRotate();
+};
+
+// Funkcija za animacijo objektov
+function objAnim() {
     objekti.map(function (obj) {
         obj.rotation.y += rotacijaY;
         obj.rotation.z += rotacijaZ;
         obj.rotation.x += rotacijaX;
         obj.material.color.offsetHSL(zamikBarve, 0, 0);
     });
+
+    width += wDiff;
+    height += hDiff;
 };
 
 // Funkcija za dodajanje novih objektov
@@ -88,24 +114,6 @@ function addObj(w, h) {
 
     objekti.push(obj);
     scene.add(obj);
-};
-
-
-function render () {
-    requestAnimationFrame(render);
-
-    // Dodaj objekt vcasih
-    if (height % 2 === 0) {
-        addObj(width, height);
-    }
-
-    renderer.render(scene, camera);
-
-    width += wDiff;
-    height += hDiff;
-
-    camRotate();
-    objRotate();
 };
 
 function camRotate () {
