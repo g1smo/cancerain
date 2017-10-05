@@ -56,7 +56,7 @@ var gostota_obj = 2;
 // Scena, kamera in render
 scene = new THREE.Scene;
 
-camera = new THREE.PerspectiveCamera(FOV, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera = new THREE.PerspectiveCamera(FOV, window.innerWidth / window.innerHeight, 0.1, 2000);
 camera.position.z = odmik_kamere;
 
 renderer = new THREE.WebGLRenderer({
@@ -134,19 +134,22 @@ function addObj(w, h) {
     }
 };
 
+var xAksa = new THREE.Vector3(0, 1, 0);
 function camRotate () {
     // rotiraj po z osi
+    /*
     camera.translateX(cam_rot_offset);
     camera.translateZ(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
 
-    /*
     camera.translateY(cam_rot_offset);
     camera.translateX(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
 
     camera.translateY(cam_rot_offset);
     camera.translateX(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
+
     */
 
+    camera.translateOnAxis(xAksa, cam_rot_offset);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 };
 
