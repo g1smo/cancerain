@@ -150,7 +150,7 @@ function camRotate () {
     */
 
     camera.translateOnAxis(xAksa, cam_rot_offset);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera.lookAt(scene.position);
 };
 
 // Inicializiraj
