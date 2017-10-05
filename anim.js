@@ -1,26 +1,51 @@
 console.log("Hello, Sky!");
 
-function lineRotate() {
-    _results = [];
+/**** ☭☭☭☭☭☭☭☭☭☭☭☭ ******
+/☭☭☭☭ Parametri razni ☭☭☭☭ *
+******☭☭☭☭☭☭☭☭☭☭☭☭******/
 
-    for (i = _i = 0, _ref = this.lines.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-        this.lines[i].rotation.y += 0.001;
-        this.lines[i].rotation.z += 0.003;
-        this.lines[i].rotation.x += 0.006;
-        _results.push(this.lines[i].material.color.offsetHSL(0.0666, 0, 0));
-    }
-    return _results;
-};
+// Odmik kamere
+var odmik_kamere = 100;
 
+// Rotacija kamere
+var cam_rot_offset = 0.2;
+
+// Vidni kot
+var FOV = 140;
+
+// Sirina in visina objektov
+var width = 2;
+var height = 2;
+
+// Prvotno prazno polje objektov. Lahko bi kak buffer to bil pozneje
+var objekti = [];
+
+
+
+
+// Parametri animacije
+var rotacijaX = 0.006;
+var rotacijaY = 0.001;
+var rotacijaZ = 0.003;
+
+var zamikBarve = 0.0666;
+
+var wDiff = 0.5;
+var hDiff = 0.5;
+
+
+
+
+
+// Scena, kamera in render
 scene = new THREE.Scene;
 
-camera = new THREE.PerspectiveCamera(140, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 100;
+camera = new THREE.PerspectiveCamera(FOV, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = odmik_kamere;
 
 renderer = new THREE.WebGLRenderer({
     alpha: true
 });
-
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Belo ozadje
@@ -28,16 +53,23 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // Črno ozadje
 renderer.setClearColor(0x000000, 1);
 
-pixel_size = 2;
-width = 2;
-height = 2;
-width -= this.width % this.pixel_size;
-height -= this.height % this.pixel_size;
-lines = [];
 
-function addLineGrid(pixel_size, width, height) {
+
+
+// Funkcija za rotacijo objektov
+function objRotate() {
+    objekti.map(function (obj) {
+        obj.rotation.y += rotacijaY;
+        obj.rotation.z += rotacijaZ;
+        obj.rotation.x += rotacijaX;
+        obj.material.color.offsetHSL(zamikBarve, 0, 0);
+    });
+};
+
+// Funkcija za dodajanje novih objektov
+function addObj(w, h) {
     var col = new THREE.Color();
-    col.setHSL(this.height / 100 % 1, 1, 0.4);
+    col.setHSL(h / 100 % 1, 1, 0.4);
 
     var mat = new THREE.LineBasicMaterial({
         color: col
@@ -45,50 +77,48 @@ function addLineGrid(pixel_size, width, height) {
 
     var geo = new THREE.Geometry();
 
-    var offset = height / 2;
+    var offset = h / 2;
 
     geo.vertices.push(new THREE.Vector3(-offset, 0, 0), new THREE.Vector3(0, offset, 0));
     geo.vertices.push(new THREE.Vector3(-offset, 0, 0), new THREE.Vector3(0, -offset, 0));
     geo.vertices.push(new THREE.Vector3(offset, 0, 0), new THREE.Vector3(0, offset, 0));
     geo.vertices.push(new THREE.Vector3(offset, 0, 0), new THREE.Vector3(0, -offset, 0));
 
-    var line = new THREE.Line(geo, mat, THREE.LineSegments);
+    var obj = new THREE.Line(geo, mat, THREE.LineSegments);
 
-    this.lines.push(line);
-    this.scene.add(line);
-
-    grid = line;
+    objekti.push(obj);
+    scene.add(obj);
 };
 
 
 function render () {
     requestAnimationFrame(render);
 
+    // Dodaj objekt vcasih
     if (height % 2 === 0) {
-        addLineGrid(pixel_size, width, height);
+        addObj(width, height);
     }
 
     renderer.render(scene, camera);
-    width += 0.5;
-    height += 0.5;
+
+    width += wDiff;
+    height += hDiff;
+
     camRotate();
-    lineRotate();
+    objRotate();
 };
 
 function camRotate () {
-    var dist = 100;
-    var offset = 1;
-
     // rotiraj po z osi
-    camera.translateX(offset);
-    camera.translateZ(dist - Math.sqrt(Math.pow(dist, 2) + Math.pow(offset, 2)));
+    camera.translateX(cam_rot_offset);
+    camera.translateZ(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
 
     /*
-    camera.translateY(offset);
-    camera.translateX(dist - Math.sqrt(Math.pow(dist, 2) + Math.pow(offset, 2)));
+    camera.translateY(cam_rot_offset);
+    camera.translateX(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
 
-    camera.translateY(offset);
-    camera.translateX(dist - Math.sqrt(Math.pow(dist, 2) + Math.pow(offset, 2)));
+    camera.translateY(cam_rot_offset);
+    camera.translateX(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
     */
 
     camera.lookAt(new THREE.Vector3(0, 0, 0));
