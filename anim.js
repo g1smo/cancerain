@@ -17,6 +17,9 @@ var FOV = 140;
 var width = 2;
 var height = 2;
 
+// Limit stevila objektov
+var obj_limit = 150000000;
+
 
 
 
@@ -33,10 +36,18 @@ var rotacijaX = 0.006;
 var rotacijaY = 0.001;
 var rotacijaZ = 0.003;
 
-var zamikBarve = 0.0666;
+// Premik obstojecih barv
+var zamikBarve = 0.0000666;
+
+// Zamik pri novem objektu
+var barva_mod = 0.333;
+var saturacija = 1;
+var svetlost = 0.4;
 
 var wDiff = 0.5;
 var hDiff = 0.5;
+
+var gostota_obj = 2;
 
 
 
@@ -68,7 +79,7 @@ function render () {
     stevec += 1;
 
     // Dodaj objekt vcasih
-    if (stevec % 2 === 0) {
+    if (stevec % gostota_obj === 0) {
         addObj(width, height);
     }
 
@@ -85,17 +96,19 @@ function objAnim() {
         obj.rotation.y += rotacijaY;
         obj.rotation.z += rotacijaZ;
         obj.rotation.x += rotacijaX;
+
+        obj.scale.z += wDiff;
+        obj.scale.y += wDiff;
+        obj.scale.x += wDiff;
+
         obj.material.color.offsetHSL(zamikBarve, 0, 0);
     });
-
-    width += wDiff;
-    height += hDiff;
 };
 
 // Funkcija za dodajanje novih objektov
 function addObj(w, h) {
     var col = new THREE.Color();
-    col.setHSL(h / 100 % 1, 1, 0.4);
+    col.setHSL(stevec * barva_mod, saturacija, svetlost);
 
     var mat = new THREE.LineBasicMaterial({
         color: col
@@ -112,8 +125,13 @@ function addObj(w, h) {
 
     var obj = new THREE.Line(geo, mat, THREE.LineSegments);
 
-    objekti.push(obj);
     scene.add(obj);
+
+    // Pocisti za seboj
+    if (objekti.push(obj) > obj_limit) {
+        scene.remove(objekti[0]);
+        objekti.shift();
+    }
 };
 
 function camRotate () {
