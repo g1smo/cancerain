@@ -18,7 +18,7 @@ var width = 2;
 var height = 2;
 
 // Limit stevila objektov
-var obj_limit = 150000000;
+var obj_limit = 1000;
 
 
 
@@ -137,19 +137,22 @@ function addObj(w, h) {
 var xAksa = new THREE.Vector3(0, 1, 0);
 function camRotate () {
     // rotiraj po z osi
-    /*
     camera.translateX(cam_rot_offset);
     camera.translateZ(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
 
+    /*
     camera.translateY(cam_rot_offset);
     camera.translateX(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
 
     camera.translateY(cam_rot_offset);
     camera.translateX(odmik_kamere - Math.sqrt(Math.pow(odmik_kamere, 2) + Math.pow(cam_rot_offset, 2)));
 
+
+
+    camera.position.x = Math.sin((stevec % 10) / 10) * cam_rot_offset;
+    camera.position.y = Math.cos((stevec % 10) / 10) * cam_rot_offset;
     */
 
-    camera.translateOnAxis(xAksa, cam_rot_offset);
     camera.lookAt(scene.position);
 };
 

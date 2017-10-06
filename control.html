@@ -1,0 +1,105 @@
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>cancerainbow control</title>
+    <style type="text/css">
+     body {
+         margin: 0
+     }
+
+     input {
+         width: 500px;
+     }
+
+    </style>
+  </head>
+  <body>
+      <table>
+          <tr>
+              <td>
+                  vidni kot (FOV)
+              </td>
+              <td>
+                <input id="fovCtl" type="range" value="140" min="30" max="179">
+              </td>
+              <td id="fovVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  visina objekta
+              </td>
+              <td>
+                <input id="visinaCtl" type="range" value="2" min="1" max="6" step="0.1">
+              </td>
+              <td id="visinaVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  sirina objekta
+              </td>
+              <td>
+                <input id="sirinaCtl" type="range" value="2" min="1" max="6" step="0.1">
+              </td>
+              <td id="sirinaVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  limit objektov
+              </td>
+              <td>
+                <input id="obj_limitCtl" type="range" value="1000" min="1" max="100000">
+              </td>
+              <td id="obj_limitVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  rotacija X
+              </td>
+              <td>
+                <input id="rotxCtl" type="range" value="0.006" min="-0.1" max="0.1" step="0.001">
+              </td>
+              <td id="rotxVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  rotacija Y
+              </td>
+              <td>
+                <input id="rotyCtl" type="range" value="0.001" min="-0.1" max="0.1" step="0.001">
+              </td>
+              <td id="rotyVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  rotacija Z
+              </td>
+              <td>
+                <input id="rotzCtl" type="range" value="0.003" min="-0.1" max="0.1" step="0.001">
+              </td>
+              <td id="rotzVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  barva
+              </td>
+              <td>
+                <input id="barvaCtl" type="range" value="0.333" min="0.001" max="0.333" step="0.001">
+              </td>
+              <td id="barvaVal"></td>
+          </tr>
+          <tr>
+              <td>
+                  kamera
+              </td>
+              <td>
+                <input id="kameraCtl" type="range" value="1" min="-10" max="10" step="0.1">
+              </td>
+              <td id="kameraVal"></td>
+          </tr>
+      </table>
+      <script src="socket.io.js"></script>
+      <script src="control.js"></script>
+      <script type="text/javascript">
+      </script>
+  </body>
+</html>
