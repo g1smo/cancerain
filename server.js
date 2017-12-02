@@ -1,25 +1,35 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
-app.get('/', function(req, res){
+const port = 6676;
+
+const include_files = [
+    '/three.min.js',
+    '/anim.js',
+    '/control.js',
+    '/nouislider.min.js',
+    '/nouislider.min.css',
+    '/lodash.min.js',
+];
+
+app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/ctl', function(req, res){
+app.get('/ctl', function(req, res) {
     res.sendFile(__dirname + '/control.html');
 });
 
-app.get('/three.min.js', function(req, res){
-    res.sendFile(__dirname + '/three.min.js');
+let settings = {};
+app.get('/settings', function(req, res) {
+    res.send(settings);
 });
 
-app.get('/anim.js', function(req, res){
-    res.sendfile(__dirname + '/anim.js');
-});
-
-app.get('/control.js', function(req, res){
-    res.sendfile(__dirname + '/control.js');
+include_files.map(function(file) {
+    app.get(file, function(req, res){
+        res.sendFile(__dirname + file);
+    });
 });
 
 app.get('/socket.io.js', function(req, res){
@@ -34,10 +44,11 @@ io.on('connection', function(socket){
     });
 
     socket.on('adjust', function(name, val) {
-        io.emit('adjust', name, val);
+        settings[name] = val;
+        io.emit('adjust', name, val, socket.id);
     });
 });
 
-http.listen(3000, function(){
-    console.log('listening on *:3000');
+http.listen(port, function(){
+    console.log('listening on *:' + port);
 });

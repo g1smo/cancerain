@@ -129,8 +129,10 @@ function addObj(w, h) {
 
     // Pocisti za seboj
     if (objekti.push(obj) > obj_limit) {
-        scene.remove(objekti[0]);
-        objekti.shift();
+        while (objekti.length > obj_limit) {
+            scene.remove(objekti[0]);
+            objekti.shift();
+        }
     }
 };
 
