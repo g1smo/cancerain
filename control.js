@@ -1,5 +1,6 @@
 // Interaktivnost
-var socket = io();
+
+var socket = new WebSocket(location.origin.replace(/https?/, 'ws'));
 
 function throttle (cb, limit) {
   var w = false;
@@ -91,7 +92,7 @@ Object.keys(inputi).map(function (name) {
         console.log("update!");
         var value = val[0];
         valEl.innerHTML = value;
-        socket.emit('adjust', name, value);
+      socket.send(['adjust', name, value].join(':'));
     }, 125));
 
     valEl.innerHTML = ctlEl.noUiSlider.get();
@@ -128,10 +129,14 @@ callbacks = {
     }
 };
 
-socket.on('adjust', function(name, val, id) {
-    if (id === socket.id) {
-        return;
-    }
+socket.onmessage = function (msg) {
+  var parts = msg.data.split(":");
+  var cmd = parts[0];
+
+  switch (cmd) {
+  case 'adjust':
+    var name = parts[1];
+    var val = parts[2];
 
     if (name in callbacks) {
         callbacks[name].call(this, val);
@@ -145,4 +150,5 @@ socket.on('adjust', function(name, val, id) {
 
     ctlEl.noUiSlider.set(val, false);
     valEl.innerHTML = ctlEl.noUiSlider.get();
-});
+  }
+};

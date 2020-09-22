@@ -1,8 +1,9 @@
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const express = require('express')
+const http = require('http')
+const WebSocket = require('ws')
 
-const port = 6676;
+const port = 6676
+
 
 const include_files = [
     '/anim.js',
@@ -10,8 +11,10 @@ const include_files = [
     '/node_modules/three/build/three.min.js',
     '/node_modules/nouislider/distribute/nouislider.min.js',
     '/node_modules/nouislider/distribute/nouislider.min.css',
-    '/node_modules/socket.io-client/dist/socket.io.js'
 ];
+
+const app = express();
+const server = http.Server(app);
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -32,19 +35,28 @@ include_files.map(function(file) {
     });
 });
 
-io.on('connection', function(socket){
-    console.log('konekt');
+server.listen(port, () => console.log('listening on *:' + port))
 
-    socket.on('disconnect', function(){
-        console.log('diskonekt');
-    });
+// Websocket init
+const wss = new WebSocket.Server({ server })
 
-    socket.on('adjust', function(name, val) {
-        settings[name] = val;
-        io.emit('adjust', name, val, socket.id);
-    });
-});
+wss.on('connection', function (ws) {
 
-http.listen(port, function(){
-    console.log('listening on *:' + port);
-});
+  console.log('kontekt')
+
+  ws.on('message', (msg) => {
+    //console.log('got msg', msg)
+    const parts = msg.split(":")
+    const cmd = parts[0]
+
+    // Broadcast adjust msg
+    switch (cmd) {
+    case 'adjust':
+      wss.clients.forEach( client => {
+        if (client != ws) {
+          client.send(msg)
+        }
+      })
+    }
+  })
+})
