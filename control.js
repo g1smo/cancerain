@@ -1,6 +1,19 @@
 // Interaktivnost
 var socket = io();
 
+function throttle (cb, limit) {
+  var w = false;
+  return function () {
+    if (!w) {
+      cb.apply(this, arguments);
+      w = true;
+      setTimeout(function () {
+        w = false;
+      }, limit);
+    }
+  }
+}
+
 inputi = {
     "fov": {
         val: 120,
@@ -74,12 +87,12 @@ Object.keys(inputi).map(function (name) {
         step: step
     });
 
-    ctlEl.noUiSlider.on('slide', _.throttle(function(val) {
+    ctlEl.noUiSlider.on('slide', throttle(function(val) {
         console.log("update!");
         var value = val[0];
         valEl.innerHTML = value;
         socket.emit('adjust', name, value);
-    }, 125, { trailing: true}));
+    }, 125));
 
     valEl.innerHTML = ctlEl.noUiSlider.get();
 });

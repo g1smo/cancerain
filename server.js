@@ -5,12 +5,12 @@ const io = require('socket.io')(http);
 const port = 6676;
 
 const include_files = [
-    '/three.min.js',
     '/anim.js',
     '/control.js',
-    '/nouislider.min.js',
-    '/nouislider.min.css',
-    '/lodash.min.js',
+    '/node_modules/three/build/three.min.js',
+    '/node_modules/nouislider/distribute/nouislider.min.js',
+    '/node_modules/nouislider/distribute/nouislider.min.css',
+    '/node_modules/socket.io-client/dist/socket.io.js'
 ];
 
 app.get('/', function(req, res) {
@@ -30,10 +30,6 @@ include_files.map(function(file) {
     app.get(file, function(req, res){
         res.sendFile(__dirname + file);
     });
-});
-
-app.get('/socket.io.js', function(req, res){
-    res.sendFile(__dirname + '/node_modules/socket.io-client/dist/socket.io.js');
 });
 
 io.on('connection', function(socket){
