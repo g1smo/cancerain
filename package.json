@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "epilepsija",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "nouislider": "14.6.2",
     "three": "0.120.1",
     "ws": "^7.3.1"
